@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     btnDefault: {
         backgroundColor: styleColors.AZUL,
         padding: 12,
-        borderRadius: 12,
+        borderRadius: 10,
         alignItems: 'center',
         marginBottom: 25
     },
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     },
     valueTotal: {
         color: styleColors.BRANCO,
-        fontSize: 17,
+        fontSize: 16,
         fontWeight: 'bold'
     }
 })

@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, FlatList, TouchableHighlight, } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
 import RoutesUtil from '../../components/RoutesUtil';
 import AlertsUtil from '../../components/AlertsUtil';
+import Util from '../../components/Util';
 
-const Peixes = ({navigation}) => {
+const Peixes = ({ navigation }) => {
     const agricultor = navigation.state.params;
     const [data, setData] = useState();
 
@@ -18,27 +19,27 @@ const Peixes = ({navigation}) => {
     async function loadItens() {
         const response = await RoutesUtil.get('peixes', agricultor.id);
 
-        if (!response) {
-            Alert.alert('Erro', 'Erro');
+        if (response.data.error) {
+            AlertsUtil.alertError(response.data.error.name, response.data.message);
         }
         else {
             setData(response.data);
         }
     }
 
-    const btnDel = (item) => [
+    const btnRow = (item) => [
         {
             text: 'EXCLUIR',
             type: 'delete',
             autoClose: true,
-            style: [{paddingBottom: 20, fontWeight: 'bold'}],
+            style: [{ paddingBottom: 20, fontWeight: 'bold' }],
             onPress: () => deleteItem(item),
         }
     ]
 
     async function deleteItem(item) {
         const response = await RoutesUtil.delete('peixe', item.id);
-        
+
         if (response.data.error) {
             AlertsUtil.alertError(response.data.error.name, response.data.message);
         }
@@ -51,7 +52,7 @@ const Peixes = ({navigation}) => {
         return (
             <View style={{ marginBottom: 10, }}>
 
-                <Swipeout right={btnDel(item)}>
+                <Swipeout right={btnRow(item)}>
                     <TouchableOpacity style={styleIndex.itemFlat} onPress={() => detalhePeixe(item)}>
 
                         <View>
@@ -65,7 +66,7 @@ const Peixes = ({navigation}) => {
 
                         <View style={styleIndex.itemFlatEnd}>
                             <Text style={styleIndex.labelItemFlat}>Data</Text>
-                            <Text style={styleIndex.valueItemFlat}>{formatDate(item.data)}</Text>
+                            <Text style={styleIndex.valueItemFlat}>{Util.ShowDate(item.data)}</Text>
 
                             <Text style={[styleIndex.labelItemFlat, { marginTop: 10 }]}>Valor</Text>
                             <Text style={styleIndex.valueItemFlat}>R${item.valTotal}</Text>
@@ -77,27 +78,20 @@ const Peixes = ({navigation}) => {
         )
     }
 
-    function formatDate(data) {   
-        return new Date(data).toDateString();
+    function detalhePeixe(item) {
+        return navigation.navigate('DetalhesPeixe', item);
     }
 
-    function detalhePeixe(item) {
-        if (item) {
-            let peixe = item
-            return navigation.navigate('DetalhesPeixe', peixe);
-        }
-
-        return navigation.navigate('DetalhesPeixe');
+    function novoPeixe(item) {
+        return navigation.navigate('DetalhesPeixe', { idAgricultor: item.id });
     }
 
     function showTotal() {
         let vTotal = 0;
         let pTotal = 0;
-        
-        if(data != null) {
-            data.map((val) => { vTotal +=  parseFloat(val.valTotal),
-                                pTotal += parseFloat(val.peso)
-            });
+
+        if (data != null) {
+            data.map((val) => { vTotal += parseFloat(val.valTotal), pTotal += parseFloat(val.peso) });
         }
 
         return (
@@ -117,7 +111,7 @@ const Peixes = ({navigation}) => {
 
     return (
         <View style={styleIndex.fundoItem}>
-          
+
             {showTotal()}
 
             <FlatList data={data}
@@ -126,11 +120,10 @@ const Peixes = ({navigation}) => {
                 renderItem={({ item }) => itemFlatList(item)}
                 keyExtractor={(item) => JSON.stringify(item.id)} />
 
-            <View style={{}}>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => detalhePeixe(agricultor)}>
+            <View>
+                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => novoPeixe(agricultor)}>
                     <Text style={styleIndex.txtDefault}>ADICIONAR PEIXE</Text>
                 </TouchableOpacity>
-
             </View>
         </View>
     );

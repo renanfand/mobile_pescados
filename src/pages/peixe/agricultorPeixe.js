@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, FlatList, } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import styleIndex from '../../css/styleIndex';
 import Swipeout from 'react-native-swipeout';
 import RoutesUtil from '../../components/RoutesUtil';
@@ -8,18 +8,18 @@ import AlertsUtil from '../../components/AlertsUtil';
 const TP_AGRICULTOR = 'P';
 
 const Peixe = ({ navigation }) => {
-    const [data, setData] = useState();
-
+    const constructor = navigation.state.params;
+    const [data, setData] = useState([]);
+    
     useEffect(() => {
         loadItens();
-    }, []);
-
+    }, [constructor]);
 
     async function loadItens() {
         const response = await RoutesUtil.get('agricultores', TP_AGRICULTOR);
 
-        if (!response) {
-            Alert.alert('Erro', 'Erro');
+        if (response.data.error) {
+            AlertsUtil.alertError(response.data.error.name, response.data.message);
         }
         else {
             setData(response.data);
@@ -41,7 +41,7 @@ const Peixe = ({ navigation }) => {
     function itemFlatList(item) {
         return (
             <View style={{ marginBottom: 10, }}>
-                <Swipeout right={btnDel(item)}>
+                <Swipeout right={btnRow(item)}>
                     <TouchableOpacity style={styleIndex.itemFlat} onPress={() => showPeixes(item)}>
                         <View>
                             <Text style={styleIndex.labelAgricultor}>Agricultor</Text>
@@ -57,7 +57,7 @@ const Peixe = ({ navigation }) => {
         return navigation.navigate('Peixes', agricultor);
     }
 
-    const btnDel = (item) => [
+    const btnRow = (item) => [
         {
             text: 'EXCLUIR',
             type: 'delete',
@@ -68,7 +68,7 @@ const Peixe = ({ navigation }) => {
     ]
 
     function adicionar() {
-        let agricultor = { tpAgricultor: TP_AGRICULTOR }
+        const agricultor = { tpAgricultor: TP_AGRICULTOR }
         navigation.navigate('DetalhesAgricultor', agricultor);
     }
 
@@ -80,15 +80,13 @@ const Peixe = ({ navigation }) => {
                 renderItem={({ item }) => itemFlatList(item)}
                 keyExtractor={(item) => JSON.stringify(item.id)} />
 
-            <View style={{}}>
+            <View>
                 <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => adicionar()}>
                     <Text style={styleIndex.txtDefault}>ADICIONAR AGRICULTOR</Text>
                 </TouchableOpacity>
-
             </View>
         </View>
     );
 };
-
 
 export default Peixe;

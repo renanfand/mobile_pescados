@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
 import RoutesUtil from '../../components/RoutesUtil';
+import AlertsUtil from '../../components/AlertsUtil';
 
 const DetalhesRacao = ({ navigation }) => {
     const { tpAgricultor } = navigation.state.params;
-
     const [nome, setNome] = useState();
 
     useEffect(() => {
@@ -18,12 +18,24 @@ const DetalhesRacao = ({ navigation }) => {
         const params = { nome, tpAgricultor };
         const response = await RoutesUtil.post('agricultor', params);
 
-        if (!response) {
-            Alert.alert('Erro', 'Erro');
+        if (response.data.error) {
+            AlertsUtil.alertError(response.data.error.name, response.data.message);
         }
         else {
             setNome('');
-            Alert.alert('Ok', 'Agricultor inserido com sucesso!');
+            voltarAgricultor();
+            AlertsUtil.toast('Agricultor inserido com sucesso!');
+        }
+    }
+
+    function voltarAgricultor() {
+        switch (tpAgricultor) {
+            case 'R':
+                navigation.navigate('AgricultorRacao', {});
+                break;
+            case 'P':
+                navigation.navigate('AgricultorPeixe', {});
+                break;
         }
     }
 

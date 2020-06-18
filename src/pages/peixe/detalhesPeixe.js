@@ -1,29 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, Picker, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, Picker, TextInput, ScrollView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
 import RoutesUtil from '../../components/RoutesUtil';
 import AlertsUtil from '../../components/AlertsUtil';
-
+import Util from '../../components/Util';
 
 const DetalhesPeixe = ({ navigation }) => {
-    const peixe = navigation.state.params;
+    const objParam = navigation.state.params;
+    const isEditando = !!objParam.peso;
+    const { idAgricultor } = navigation.state.params;
 
-    const [tipo, setTipo] = useState();
-    const [peso, setPeso] = useState(0);
     const [data, setData] = useState();
-    const [valUnitario, setValUnitario] = useState("");
-    const [idAgricultor, setIdAgricultor] = useState();
+    const [dataPeixes, setDataPeixes] = useState([]);
+    const [peso, setPeso] = useState(0);
+    const [tipo, setTipo] = useState();
+    const [valUnitario, setValUnitario] = useState(0);
     const [valTotal, setValTotal] = useState(0);
-
-    let i = 1;
-    var dataPeixes = [
-        { id: i++, label: 'Tilapia' },
-        { id: i++, label: 'Carpa' },
-        { id: i++, label: 'Outros' },
-    ];
 
     const styleDataPicker = {
         dateIcon: {
@@ -46,43 +41,64 @@ const DetalhesPeixe = ({ navigation }) => {
     }
 
     useEffect(() => {
+        loadPeixes();
         setValues();
     }, []);
 
-    function setValues() {
-        if (peixe.peso) {
-            setTipo(peixe.tipo);
-            setPeso(peixe.peso);
-            setData(new Date(peixe.data));
-            setValUnitario(peixe.valUnitario);
-            setValTotal(peixe.valTotal);
-        }
-        else {
-            setIdAgricultor(peixe.id);
-            setTipo(1);
-            setData(new Date());
-        }
-
-    }
-
-    async function salvar() {
-
-        const params = { data, peso, valUnitario, valTotal: showValTotal(), idTipoPeixe: tipo, idAgricultor };
-        console.log(params);
-
-        const response = await RoutesUtil.post('peixe', params);
+    async function loadPeixes() {
+        const response = await RoutesUtil.get('tipopeixe');
 
         if (response.data.error) {
             AlertsUtil.alertError(response.data.error.name, response.data.message);
         }
         else {
-            Alert.alert('Ok', 'Peixe inserido com sucesso!');
+            setDataPeixes(response.data);
+        }
+    }
+
+    function setValues() {
+        if (isEditando) {
+            setTipo(objParam.idTipoPeixe);
+            setPeso(objParam.peso);
+            setData(Util.Date(objParam.data));
+            setValUnitario(objParam.valUnitario);
+            setValTotal(objParam.valTotal);
+        }
+        else {
+            setData(Util.Date());
+        }
+    }
+
+    function organizaParams() {
+        return  {   data, 
+                    peso: peso ? Util.valor(peso) : 0, 
+                    valUnitario: valUnitario ? Util.valor(valUnitario) : 0, 
+                    valTotal: showValTotal(), 
+                    idTipoPeixe: tipo, 
+                    idAgricultor 
+                };
+    }
+
+    async function salvar() {
+        const params = organizaParams();
+        let response = null;
+
+        isEditando ? response = await RoutesUtil.put(`peixe/${objParam.id}`, params):
+                     response = await RoutesUtil.post('peixe', params);
+        
+        if (response.data.error) {
+            AlertsUtil.alertError(response.data.error.name, response.data.message);
+        }
+        else {
+            isEditando ? AlertsUtil.toast('Peixe atualizado com sucesso!'):
+                         AlertsUtil.toast('Peixe inserido com sucesso!');
+            
             navigation.navigate('Peixes', {});
         }
     }
 
     function showValTotal() {
-        return (peso && valUnitario ? peso * valUnitario.replace(",", ".") : 0).toFixed(2)
+        return (peso && valUnitario ? Util.valor(peso) * Util.valor(valUnitario) : 0).toFixed(2);
     }
 
     return (
@@ -99,10 +115,9 @@ const DetalhesPeixe = ({ navigation }) => {
                         activeItemTextStyle={{ fontSize: 28, fontWeight: 'bold' }}
                         onValueChange={(val) => setTipo(val)}>
 
-                        {dataPeixes.map(item => <Picker.Item key={item.id}
-                            value={item.id}
-                            label={item.label} />)}
+                        {dataPeixes.map((item) => <Picker.Item key={item.id} value={item.id} label={item.nome} />)}
                     </Picker>
+
                 </View>
 
                 <View style={styleIndex.containerInput}>
@@ -117,14 +132,14 @@ const DetalhesPeixe = ({ navigation }) => {
                         confirmBtnText="Ok"
                         cancelBtnText="Cancelar"
                         customStyles={styleDataPicker}
-                        onDateChange={(val) => setData(val)}
+                        onDateChange={(val, valNotFormat) => setData(valNotFormat)}
                     />
                 </View>
 
                 <View style={styleIndex.containerInput}>
                     <Text style={styleIndex.labelForm}>Peso (kg)</Text>
                     <TextInput style={styleIndex.inputDefault}
-                        placeholder="DIgite o peso"
+                        placeholder="Digite o peso"
                         placeholderTextColor={styleColors.CINZA_MEDIO}
                         keyboardType='decimal-pad'
                         autoCapitalize="none"
@@ -164,7 +179,7 @@ const DetalhesPeixe = ({ navigation }) => {
 }
 
 DetalhesPeixe.navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params ? "Editar peixe" : "Inserir peixe"
+    title: navigation.state.params.peso ? "Editar peixe" : "Inserir peixe"
 });
 
 export default DetalhesPeixe;
