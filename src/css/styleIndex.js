@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
         padding: 12,
         borderRadius: 10,
         alignItems: 'center',
-        marginBottom: 25
     },
     txtDefault: {
         fontSize: 20,

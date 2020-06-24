@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
 
+import AlertsUtil from '../../components/AlertsUtil';
+import Util from '../../components/Util';
+import Button from '../../components/Button';
+import Request from '../../components/Request';
+import Spinners from '../../components/Spinner';
+
 const DetalhesRacao = ({ navigation }) => {
-    const racao = navigation.state.params;
+    const objParam = navigation.state.params;
+    const isEditando = !!objParam.quantidade;
+    const { idAgricultor } = navigation.state.params;
 
     const [tipo, setTipo] = useState(0);
     const [quantidade, setQuantidade] = useState(0);
-    const [data, setData] = useState();
-    const [valorUni, setValorUni] = useState("");
-    const [valorTotal, setValorTotal] = useState(0);
+    const [data, setData] = useState(null);
+    const [valUnitario, setValorUni] = useState(0);
+    const [valorTotal, setValTotal] = useState(0);
+    const [spinner, setSpinner] = useState(false);
 
     const styleDataPicker = {
         dateIcon: {
@@ -39,39 +48,59 @@ const DetalhesRacao = ({ navigation }) => {
     }, []);
 
     function setValues() {
-        if (racao) {
-            setTipo(racao.tipo);
-            setQuantidade(JSON.stringify(racao.quantidade));
-            setData(racao.data);
-            setValorUni(JSON.stringify(racao.valorUni));
-            setValorTotal(JSON.stringify(racao.valorTotal));
+        if (isEditando) {
+            setTipo(objParam.tipo);
+            setData(Util.Date(objParam.data));
+            setQuantidade(JSON.stringify(objParam.quantidade));
+            setValorUni(objParam.valUnitario);
+            setValTotal(objParam.valorTotal);
         }
         else {
-            setData(new Date());
+            setData(Util.Date());
         }
     }
 
-    function validaParams() {
-        setValorTotal((quantidade * valorUni.replace(",",".")).toFixed(2));
+    function organizaParams() {
+        return {
+            data,
+            tipo: tipo ? Util.valor(tipo) : 0,
+            quantidade: quantidade ? Util.valor(quantidade) : 0,
+            valUnitario: valUnitario ? Util.valor(valUnitario) : 0,
+            valTotal: showValTotal(),
+            idAgricultor
+        };
     }
 
-    function salvar() {
-        validaParams();
-        Alert.alert('Salvar Ração', `Tipo: ${tipo}\nData: ${data}\nQuantidade: ${quantidade}\nValorUnitario: R$${valorUni}\nValorTotal: R$${quantidade * valorUni}`);
+    async function salvar() {
+        const params = organizaParams();
+        let response = null;
+
+        setSpinner(true);
+        isEditando ? response = await Request.put(`racao/${objParam.id}`, params) :
+                     response = await Request.post('racao', params);
+        setSpinner(false);
+
+        if (response) {
+            isEditando ? AlertsUtil.toast('Ração atualizada com sucesso!') :
+                         AlertsUtil.toast('Ração inserida com sucesso!');
+
+            return navigation.navigate('Racoes', {});
+        }
     }
 
     function showValTotal() {
-        return (quantidade && valorUni ? quantidade * valorUni.replace(",",".") : 0).toFixed(2)
+        return (quantidade && valUnitario ? quantidade * Util.valor(valUnitario) : 0).toFixed(2)
     }
 
     return (
         <View style={styleIndex.fundo}>
+            <Spinners valSpinner={spinner} />
+            
             <ScrollView style={styleIndex.componentInput}>
                 <View style={styleIndex.containerInput}>
                     <Text style={styleIndex.labelForm}>Tipo</Text>
                     <TextInput style={styleIndex.inputDefault}
                         placeholder="Tipo da ração"
-                        keyboardType='decimal-pad'
                         placeholderTextColor={styleColors.CINZA_MEDIO}
                         autoCapitalize="none"
                         autoCorrect={false}
@@ -93,7 +122,7 @@ const DetalhesRacao = ({ navigation }) => {
                         confirmBtnText="Ok"
                         cancelBtnText="Cancelar"
                         customStyles={styleDataPicker}
-                        onDateChange={(val) => setData(val)}
+                        onDateChange={(val, valNotFormat) => setData(valNotFormat)}
                     />
                 </View>
 
@@ -118,7 +147,7 @@ const DetalhesRacao = ({ navigation }) => {
                         placeholderTextColor={styleColors.CINZA_MEDIO}
                         autoCapitalize="none"
                         autoCorrect={false}
-                        value={valorUni}
+                        value={valUnitario}
                         onChangeText={setValorUni}
                     />
                 </View>
@@ -129,11 +158,7 @@ const DetalhesRacao = ({ navigation }) => {
                 </View>
             </ScrollView>
 
-            <View>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => salvar()}>
-                    <Text style={styleIndex.txtDefault}>SALVAR</Text>
-                </TouchableOpacity>
-            </View>
+            <Button label={"SALVAR"} onPress={salvar} />
         </View>
     );
 }

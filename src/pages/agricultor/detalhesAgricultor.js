@@ -1,28 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput } from 'react-native';
 
 import styleIndex from '../../css/styleIndex';
-import styleColors from '../../css/styleColors';
-import RoutesUtil from '../../components/RoutesUtil';
 import AlertsUtil from '../../components/AlertsUtil';
+import Request from '../../components/Request';
+import styleColors from '../../css/styleColors';
+
+import Spinners from '../../components/Spinner';
+import Buttom from '../../components/Button';
 
 const DetalhesRacao = ({ navigation }) => {
     const { tpAgricultor } = navigation.state.params;
     const [nome, setNome] = useState();
-
-    useEffect(() => {
-
-    }, []);
+    const [spinner, setSpinner] = useState(false);
 
     async function salvar() {
-        const params = { nome, tpAgricultor };
-        const response = await RoutesUtil.post('agricultor', params);
+        const param = { nome, tpAgricultor };
+        
+        setSpinner(true);
+        const response = await Request.post('agricultor', param);
+        setSpinner(false);
 
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            setNome('');
+        if (response) {
             voltarAgricultor();
             AlertsUtil.toast('Agricultor inserido com sucesso!');
         }
@@ -41,6 +40,7 @@ const DetalhesRacao = ({ navigation }) => {
 
     return (
         <View style={styleIndex.fundo}>
+            <Spinners valSpinner={spinner} />
             <View>
                 <Text style={styleIndex.titulo}>Inserir Agricultor</Text>
             </View>
@@ -48,6 +48,7 @@ const DetalhesRacao = ({ navigation }) => {
             <View style={styleIndex.componentInput}>
                 <View style={styleIndex.containerInput}>
                     <Text style={styleIndex.labelForm}>Nome</Text>
+
                     <TextInput style={styleIndex.inputDefault}
                         placeholder="Digite o nome do agricultor"
                         placeholderTextColor={styleColors.CINZA_MEDIO}
@@ -59,11 +60,7 @@ const DetalhesRacao = ({ navigation }) => {
                 </View>
             </View>
 
-            <View>
-                <TouchableOpacity style={styleIndex.btnDefault} onPress={() => salvar()}>
-                    <Text style={styleIndex.txtDefault}>SALVAR</Text>
-                </TouchableOpacity>
-            </View>
+            <Buttom label="SALVAR" onPress={salvar} />
         </View>
     );
 }

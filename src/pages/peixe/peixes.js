@@ -4,27 +4,35 @@ import Swipeout from 'react-native-swipeout';
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
-import RoutesUtil from '../../components/RoutesUtil';
-import AlertsUtil from '../../components/AlertsUtil';
+
 import Util from '../../components/Util';
+import Button from '../../components/Button';
+import Request from '../../components/Request';
+import Spinners from '../../components/Spinner';
 
 const Peixes = ({ navigation }) => {
     const agricultor = navigation.state.params;
     const [data, setData] = useState();
+    const [spinner, setSpinner] = useState(false);
 
     useEffect(() => {
         loadItens();
     }, [agricultor]);
 
     async function loadItens() {
-        const response = await RoutesUtil.get('peixes', agricultor.id);
+        setSpinner(true);
+        const response = await Request.get('peixes', agricultor.id);
+        setSpinner(false);
 
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            setData(response.data);
-        }
+        return response ? setData(response) : null;
+    }
+
+    async function deleteItem(item) {
+        setSpinner(true);
+        const response = await Request.delete('peixe', item.id);
+        setSpinner(false);
+
+        return response ? loadItens() : null;
     }
 
     const btnRow = (item) => [
@@ -37,27 +45,14 @@ const Peixes = ({ navigation }) => {
         }
     ]
 
-    async function deleteItem(item) {
-        const response = await RoutesUtil.delete('peixe', item.id);
-
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            loadItens();
-        }
-    }
-
     function itemFlatList(item) {
         return (
             <View style={{ marginBottom: 10, }}>
-
                 <Swipeout right={btnRow(item)}>
                     <TouchableOpacity style={styleIndex.itemFlat} onPress={() => detalhePeixe(item)}>
-
                         <View>
                             <Text style={styleIndex.labelItemFlat}>Peixe</Text>
-                            <Text style={styleIndex.valueItemFlat}>{item.idTipoPeixe}</Text>
+                            <Text style={styleIndex.valueItemFlat}>{item.tipoPeixe.nome}</Text>
 
                             <Text style={[styleIndex.labelItemFlat, { marginTop: 10 }]}>Peso</Text>
                             <Text style={styleIndex.valueItemFlat}>{item.peso}kg</Text>
@@ -111,20 +106,15 @@ const Peixes = ({ navigation }) => {
 
     return (
         <View style={styleIndex.fundoItem}>
-
+            <Spinners valSpinner={spinner} />
             {showTotal()}
-
             <FlatList data={data}
                 showsVerticalScrollIndicator={false}
                 style={styleIndex.flat}
                 renderItem={({ item }) => itemFlatList(item)}
                 keyExtractor={(item) => JSON.stringify(item.id)} />
 
-            <View>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => novoPeixe(agricultor)}>
-                    <Text style={styleIndex.txtDefault}>ADICIONAR PEIXE</Text>
-                </TouchableOpacity>
-            </View>
+            <Button label="ADICIONAR PEIXE" onPress={() => novoPeixe(agricultor)} />
         </View>
     );
 };

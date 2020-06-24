@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Picker, TextInput, ScrollView } from 'react-native';
+import { View, Text, Picker, TextInput, ScrollView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 
 import styleIndex from '../../css/styleIndex';
 import styleColors from '../../css/styleColors';
-import RoutesUtil from '../../components/RoutesUtil';
+
 import AlertsUtil from '../../components/AlertsUtil';
 import Util from '../../components/Util';
+import Button from '../../components/Button';
+import Request from '../../components/Request';
+import Spinners from '../../components/Spinner';
+
 
 const DetalhesPeixe = ({ navigation }) => {
     const objParam = navigation.state.params;
@@ -19,6 +23,7 @@ const DetalhesPeixe = ({ navigation }) => {
     const [tipo, setTipo] = useState();
     const [valUnitario, setValUnitario] = useState(0);
     const [valTotal, setValTotal] = useState(0);
+    const [spinner, setSpinner] = useState(0);
 
     const styleDataPicker = {
         dateIcon: {
@@ -46,14 +51,11 @@ const DetalhesPeixe = ({ navigation }) => {
     }, []);
 
     async function loadPeixes() {
-        const response = await RoutesUtil.get('tipopeixe');
+        setSpinner(true)
+        const response = await Request.get('tipopeixe');
+        setSpinner(false);
 
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            setDataPeixes(response.data);
-        }
+        return response ? setDataPeixes(response) : null;
     }
 
     function setValues() {
@@ -83,17 +85,14 @@ const DetalhesPeixe = ({ navigation }) => {
         const params = organizaParams();
         let response = null;
 
-        isEditando ? response = await RoutesUtil.put(`peixe/${objParam.id}`, params):
-                     response = await RoutesUtil.post('peixe', params);
+        isEditando ? response = await Request.put(`peixe/${objParam.id}`, params) :
+                     response = await Request.post('peixe', params);
         
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            isEditando ? AlertsUtil.toast('Peixe atualizado com sucesso!'):
+        if (response) {
+            isEditando ? AlertsUtil.toast('Peixe atualizado com sucesso!') :
                          AlertsUtil.toast('Peixe inserido com sucesso!');
             
-            navigation.navigate('Peixes', {});
+            return navigation.navigate('Peixes', {});
         }
     }
 
@@ -103,6 +102,7 @@ const DetalhesPeixe = ({ navigation }) => {
 
     return (
         <View style={styleIndex.fundo}>
+            <Spinners valSpinner={spinner} />
             <ScrollView style={styleIndex.componentInput}>
 
                 <View style={styleIndex.containerInput}>
@@ -169,11 +169,7 @@ const DetalhesPeixe = ({ navigation }) => {
 
             </ScrollView>
 
-            <View>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => salvar()}>
-                    <Text style={styleIndex.txtDefault}>SALVAR</Text>
-                </TouchableOpacity>
-            </View>
+            <Button label={"SALVAR"} onPress={salvar} />
         </View>
     );
 }

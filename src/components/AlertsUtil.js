@@ -4,7 +4,7 @@ export default {
   alertDefault(title, message,){
     return Alert.alert(
       title,
-      JSON.stringify(message),
+      message,
       [
         {text: 'OK', onPress: () => {}},
       ],
@@ -23,8 +23,8 @@ export default {
   },
   alertError(errorName, menssagem){
     return Alert.alert(
-      'Ops',
-      'Erro: ' + errorName + '\n' + menssagem,
+      'Algo deu errado :(', 
+      menssagem,
       [
         {text: 'OK', onPress: () => {}},
       ],

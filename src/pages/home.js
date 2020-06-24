@@ -1,21 +1,19 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Alert, Image, } from 'react-native';
+import { View, Image } from 'react-native';
 
-import styleIndex from '../css/styleIndex'
 import image from '../img/logo.png'
+import styleIndex from '../css/styleIndex'
 
-const Home = ({navigation}) => {
+import Button from '../components/Button';
+
+const Home = ({ navigation }) => {
 
     function handlePeixe() {
         navigation.navigate('AgricultorPeixe');
     }
-    
+
     function handleRacao() {
         navigation.navigate('AgricultorRacao');
-    }
-
-    function handleTeste() {
-        navigation.navigate('Teste');
     }
 
     return (
@@ -25,16 +23,10 @@ const Home = ({navigation}) => {
             </View>
 
             <View style={styleIndex.containerbtn}>
-                <TouchableOpacity style={styleIndex.btnDefault} onPress={() => handlePeixe()}>
-                    <Text style={styleIndex.txtDefault}>Peixe</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styleIndex.btnDefault} onPress={() => handleRacao()}>
-                    <Text style={styleIndex.txtDefault}>Ração</Text>
-                </TouchableOpacity>
-
+                <Button label="PEIXE" onPress={handlePeixe} />
+                <View style={{ paddingBottom: 15 }}></View>
+                <Button label="RAÇÃO" onPress={handleRacao} />
             </View>
-
         </View>
     );
 };

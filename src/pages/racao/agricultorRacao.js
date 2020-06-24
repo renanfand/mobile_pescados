@@ -1,44 +1,55 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, Alert, FlatList, } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import styleIndex from '../../css/styleIndex';
 import Swipeout from 'react-native-swipeout';
-import RoutesUtil from '../../components/RoutesUtil';
-import AlertsUtil from '../../components/AlertsUtil';
 
+import Button from '../../components/Button';
+import Request from '../../components/Request';
+import Spinners from '../../components/Spinner';
 
 const TP_AGRICULTOR = 'R';
 
 const AgricultorRacao = ({navigation}) => {
-    const [data, setData] = useState();
-
+    const constructor = navigation.state.params;
+    const [data, setData] = useState([]);
+    const [spinner, setSpinner] = useState(false);
+    
     useEffect(() => {
         loadItens();
-    }, []);
+    }, [constructor]);
 
     async function loadItens() {
-        const response = await RoutesUtil.get('agricultores', TP_AGRICULTOR);
+        setSpinner(true);
+        const response = await Request.get('agricultores', TP_AGRICULTOR);
+        setSpinner(false);
 
-        if (!response) {
-            Alert.alert('Erro', 'Erro');
-        }
-        else {
-            setData(response.data);
-        }
+        return response ? setData(response) : null;
+    }
+
+    function itemFlatList(item) {
+        return (
+            <View style={{ marginBottom: 10, }}>
+                <Swipeout right={btnDel(item)}>
+                    <TouchableOpacity style={styleIndex.itemFlat} onPress={() => showRacoes(item)}>
+                        <View>
+                            <Text style={styleIndex.labelAgricultor}>Agricultor</Text>
+                            <Text style={styleIndex.nomeAgricultor}>{item.nome}</Text>
+                        </View>
+                    </TouchableOpacity>
+                </Swipeout>
+            </View>
+        )
     }
 
     async function deleteItem(item) {
+        setSpinner(true);
+        const response = await Request.delete('agricultor', item.id);        
+        setSpinner(false);
         
-        const response = await RoutesUtil.delete('agricultor', item.id);
-        
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            loadItens();
-        }
+        return response ? loadItens() : null;
     }
 
-    function exibeAgriculor(agricultor) {
+    function showRacoes(agricultor) {
         return navigation.navigate('Racoes', agricultor);
     }
 
@@ -52,40 +63,22 @@ const AgricultorRacao = ({navigation}) => {
         }
     ]
 
-    function itemFlatList(item) {
-        return (
-            <View style={{ marginBottom: 10, }}>
-                <Swipeout right={btnDel(item)}>
-                    <TouchableOpacity style={styleIndex.itemFlat} onPress={() => exibeAgriculor(item)}>
-                        <View>
-                            <Text style={styleIndex.labelAgricultor}>Agricultor</Text>
-                            <Text style={styleIndex.nomeAgricultor}>{item.nome}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </Swipeout>
-            </View>
-        )
-    }
-
     function adicionar() {
-        let agricultor = { tpAgricultor: 'racao' }
+        const agricultor = { tpAgricultor: TP_AGRICULTOR }
         navigation.navigate('DetalhesAgricultor', agricultor);
     }
 
     return (
         <View style={styleIndex.fundoItem}>
+            <Spinners valSpinner={spinner} />
+            
             <FlatList data={data}
                 showsVerticalScrollIndicator={false}
                 style={styleIndex.flat}
                 renderItem={({ item }) => itemFlatList(item)}
                 keyExtractor={(item) => JSON.stringify(item.id)} />
 
-            <View style={{}}>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => adicionar()}>
-                    <Text style={styleIndex.txtDefault}>ADICIONAR AGRICULTOR</Text>
-                </TouchableOpacity>
-
-            </View>
+            <Button label="ADICIONAR AGRICULTOR" onPress={adicionar} />
         </View>
     );
 };

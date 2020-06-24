@@ -2,40 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
 import styleIndex from '../../css/styleIndex';
 import Swipeout from 'react-native-swipeout';
-import RoutesUtil from '../../components/RoutesUtil';
-import AlertsUtil from '../../components/AlertsUtil';
+
+import Button from '../../components/Button';
+import Request from '../../components/Request';
+import Spinners from '../../components/Spinner';
 
 const TP_AGRICULTOR = 'P';
 
 const Peixe = ({ navigation }) => {
     const constructor = navigation.state.params;
     const [data, setData] = useState([]);
-    
+    const [spinner, setSpinner] = useState(false);
+
     useEffect(() => {
         loadItens();
     }, [constructor]);
 
     async function loadItens() {
-        const response = await RoutesUtil.get('agricultores', TP_AGRICULTOR);
+        setSpinner(true);
+        const response = await Request.get('agricultores', TP_AGRICULTOR);
+        setSpinner(false);
 
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            setData(response.data);
-        }
+        return response ? setData(response) : null;
     }
 
     async function deleteItem(item) {
+        setSpinner(true);
+        const response = await Request.delete('agricultor', item.id);
+        setSpinner(false);
         
-        const response = await RoutesUtil.delete('agricultor', item.id);
-        
-        if (response.data.error) {
-            AlertsUtil.alertError(response.data.error.name, response.data.message);
-        }
-        else {
-            loadItens();
-        }
+        return response ? loadItens() : null;
     }
 
     function itemFlatList(item) {
@@ -74,17 +70,14 @@ const Peixe = ({ navigation }) => {
 
     return (
         <View style={styleIndex.fundoItem}>
+            <Spinners valSpinner={spinner} />
             <FlatList data={data}
                 showsVerticalScrollIndicator={false}
                 style={styleIndex.flat}
                 renderItem={({ item }) => itemFlatList(item)}
                 keyExtractor={(item) => JSON.stringify(item.id)} />
 
-            <View>
-                <TouchableOpacity style={[styleIndex.btnDefault, { marginBottom: 0 }]} onPress={() => adicionar()}>
-                    <Text style={styleIndex.txtDefault}>ADICIONAR AGRICULTOR</Text>
-                </TouchableOpacity>
-            </View>
+            <Button label="ADICIONAR AGRICULTOR" onPress={adicionar} />
         </View>
     );
 };
