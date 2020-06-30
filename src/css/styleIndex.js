@@ -17,19 +17,21 @@ const styles = StyleSheet.create({
     },
     containerImg: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     img: {
-        width: Dimensions.get('window').width - 40,
-        height: 120,
+        width: '65%',
+        height: '65.5%',
     },
     containerbtn: {
-        flex: 1
+        flex: 1,
+        justifyContent: 'flex-start'
     },
     btnDefault: {
         backgroundColor: styleColors.AZUL,
         padding: 12,
-        borderRadius: 10,
+        borderRadius: 5,
         alignItems: 'center',
     },
     txtDefault: {
