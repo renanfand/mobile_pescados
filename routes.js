@@ -2,6 +2,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import Home from './src/pages/home';
+import Teste from './src/pages/teste';
 
 import AgricultorPeixe from './src/pages/peixe/agricultorPeixe'
 import Peixes from './src/pages/peixe/peixes'
@@ -31,6 +32,10 @@ const AppNavigator = createStackNavigator({
         navigationOptions: {
             header: () => false
         }
+    },
+    Teste: {
+        screen: Teste,
+        navigationOptions: () => styleHeader()
     },
     Peixes: {
         screen: Peixes,

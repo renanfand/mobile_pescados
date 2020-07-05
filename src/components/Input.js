@@ -4,28 +4,25 @@ import { View, Text, TextInput } from 'react-native';
 import styleColors from '../css/styleColors';
 import styleIndex from '../css/styleIndex';
 
-const Input = ({label, placeholder, valor}) => {
-    const [variavel, setVariavel] = useState(valor);
+const Input = ({ label, placeholder, val, blur, focus, changeText, type }) => {
 
-    useEffect(() => {
-        console.log(variavel);
-    }, [variavel]);
-    
     return (
-        <View style={styleIndex.componentInput}>
+        <>
             <View style={styleIndex.containerInput}>
                 <Text style={styleIndex.labelForm}>{label}</Text>
-                
+
                 <TextInput style={styleIndex.inputDefault}
-                           placeholder={placeholder}
-                           placeholderTextColor={styleColors.CINZA_MEDIO}
-                           autoCapitalize="none"
-                           autoCorrect={false}
-                           value={variavel}
-                           onChangeText={setVariavel}
+                    placeholder={placeholder}
+                    onChangeText={changeText}
+                    keyboardType={type == 'number' ? "decimal-pad" : 'default'}
+                    onBlur={blur}
+                    placeholderTextColor={styleColors.CINZA_PLACE}
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    value={val}
                 />
             </View>
-        </View>
+        </>
     );
 };
 

@@ -9,7 +9,7 @@ export default {
             return this.returnDefault(response);
         }
         catch (error) {
-            AlertsUtil.alertDefault("Ops...", error.message || error);
+            AlertsUtil.alertError(error.name, error.message || error);
         }
     },
 
@@ -25,7 +25,7 @@ export default {
             }
         }
         catch (error) {
-            AlertsUtil.alertDefault("Ops...", error.message || error);
+            AlertsUtil.alertError(error.name, error.message || error);
         }
     },
 
@@ -35,7 +35,7 @@ export default {
             return this.returnDefault(response);
         }
         catch (error) {
-            AlertsUtil.alertDefault("Ops...", error.message || error);
+            AlertsUtil.alertError(error.name, error.message || error);
         }
     },
 
@@ -45,7 +45,7 @@ export default {
             return this.returnDefault(response);
         }
         catch (error) {
-            AlertsUtil.alertDefault("Ops...", error.message || error);
+            AlertsUtil.alertError(error.name, error.message || error);
         }
     },
 

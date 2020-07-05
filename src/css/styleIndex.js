@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     img: {
         width: '65%',
-        height: '65.5%',
+        height: '65%',
     },
     containerbtn: {
         flex: 1,

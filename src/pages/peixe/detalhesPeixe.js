@@ -17,7 +17,7 @@ const DetalhesPeixe = ({ navigation }) => {
     const isEditando = !!objParam.peso;
     const { idAgricultor } = navigation.state.params;
 
-    const [data, setData] = useState();
+        const [data, setData] = useState();
     const [dataPeixes, setDataPeixes] = useState([]);
     const [peso, setPeso] = useState(0);
     const [tipo, setTipo] = useState();
