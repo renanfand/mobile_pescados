@@ -14,7 +14,7 @@ import DetalhesRacao from './src/pages/racao/detalhesRacao'
 
 import DetalhesAgricultor from './src/pages/agricultor/detalhesAgricultor'
 
-import styleColors from './src/css/styleColors';
+import styleColors from './src/assets/css/styleColors';
 
 function styleHeader(title) {
     return ({

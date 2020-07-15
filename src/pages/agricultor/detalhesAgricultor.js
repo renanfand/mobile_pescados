@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput } from 'react-native';
 
-import styleIndex from '../../css/styleIndex';
+import styleIndex from '../../assets/css/styleIndex';
 import AlertsUtil from '../../components/AlertsUtil';
 import Request from '../../components/Request';
-import styleColors from '../../css/styleColors';
+import styleColors from '../../assets/css/styleColors';
 
 import Spinners from '../../components/Spinner';
 import Buttom from '../../components/Button';

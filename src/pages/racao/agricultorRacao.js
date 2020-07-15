@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, } from 'react-native';
-import styleIndex from '../../css/styleIndex';
+import styleIndex from '../../assets/css/styleIndex';
 import Swipeout from 'react-native-swipeout';
 
 import Button from '../../components/Button';

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 
-import styleIndex from '../../css/styleIndex';
-import styleColors from '../../css/styleColors';
+import styleIndex from '../../assets/css/styleIndex';
+import styleColors from '../../assets/css/styleColors';
 
 import Util from '../../components/Util';
 import Button from '../../components/Button';

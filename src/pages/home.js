@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import image from '../img/Pescados.png'
-import styleIndex from '../css/styleIndex'
+import image from '../assets/img/Pescados.png'
+import styleIndex from '../assets/css/styleIndex'
 import Button from '../components/Button';
 
 const Home = ({ navigation }) => {

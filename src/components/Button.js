@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native';
-import styleIndex from '../css/styleIndex';
+import styleIndex from '../assets/css/styleIndex';
 import LinearGradient from 'react-native-linear-gradient'
 
 const Button = ({ label, onPress }) => {

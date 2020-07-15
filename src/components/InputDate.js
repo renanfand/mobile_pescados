@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 
-import styleColors from '../css/styleColors';
-import styleIndex from '../css/styleIndex';
+import styleColors from '../assets/css/styleColors';
+import styleIndex from '../assets/css/styleIndex';
 
 const InputDate = ({ label, val, blur, changeText }) => {
     const styleDataPicker = {

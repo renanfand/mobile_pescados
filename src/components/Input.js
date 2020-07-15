@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput } from 'react-native';
 
-import styleColors from '../css/styleColors';
-import styleIndex from '../css/styleIndex';
+import styleColors from '../assets/css/styleColors';
+import styleIndex from '../assets/css/styleIndex';
 
 const Input = ({ label, placeholder, val, blur, focus, changeText, type }) => {
 
@@ -14,7 +14,7 @@ const Input = ({ label, placeholder, val, blur, focus, changeText, type }) => {
                 <TextInput style={styleIndex.inputDefault}
                     placeholder={placeholder}
                     onChangeText={changeText}
-                    keyboardType={type == 'number' ? "decimal-pad" : 'default'}
+                    keyboardType={type == 'number' ? "decimal-pad" : 'ascii-capable'}
                     onBlur={blur}
                     placeholderTextColor={styleColors.CINZA_PLACE}
                     autoCapitalize="none"

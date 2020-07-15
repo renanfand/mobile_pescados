@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 
-import styleIndex from '../../css/styleIndex';
-import styleColors from '../../css/styleColors';
+import styleIndex from '../../assets/css/styleIndex';
+import styleColors from '../../assets/css/styleColors';
 
 import AlertsUtil from '../../components/AlertsUtil';
 import Util from '../../components/Util';

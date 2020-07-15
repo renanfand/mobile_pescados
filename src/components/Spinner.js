@@ -1,5 +1,5 @@
 import React from 'react';
-import styleSpinner from '../css/styleSpinner';
+import styleSpinner from '../assets/css/styleSpinner';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const Spinners = ({ valSpinner }) => {
