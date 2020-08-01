@@ -7,6 +7,7 @@ import ImgDivizao from '../assets/img/divizor.png';
 import styleIndex from '../assets/css/styleIndex';
 import Button from '../components/Button';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import styleColors from '../assets/css/styleColors';
 
 const Home = ({ navigation }) => {
 
@@ -23,7 +24,7 @@ const Home = ({ navigation }) => {
     }
 
     return (
-        <View style={styleIndex.fundo}>
+        <View style={[styleIndex.fundo,{backgroundColor: styleColors.AZUL}]}>
             <View style={styleIndex.containerImg}>
                 <Image source={image} style={styleIndex.img} />
             </View>

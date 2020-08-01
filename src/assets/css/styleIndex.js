@@ -4,7 +4,7 @@ import styleColors from './styleColors';
 
 const styles = StyleSheet.create({
     fundo: {
-        backgroundColor: styleColors.AZUL,
+        backgroundColor: styleColors.CINZA_CLARO,
         padding: 20,
         alignItems: 'stretch',
         flex: 1
@@ -25,9 +25,9 @@ const styles = StyleSheet.create({
         height: '35%',
     },
     imgIcon: {
-        width: '40%',
+        width: '35%',
         height: '0%',
-        paddingVertical: 40,
+        paddingVertical: 35,
         marginHorizontal: 20,
     },
     imgDivizor: {
