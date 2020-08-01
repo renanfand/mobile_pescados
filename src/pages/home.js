@@ -26,12 +26,12 @@ const Home = ({ navigation }) => {
 
             <View style={styleIndex.containerbtn}>
                 <Button label="PEIXE" onPress={handlePeixe} />
-                <View style={{ marginVertical: 12}}></View>
+                <View style={{ marginVertical: 8}}></View>
                 
                 <Button label="RAÇÃO" onPress={handleRacao} />
-                <View style={{ marginVertical: 12}}></View>
+                <View style={{ marginVertical: 8}}></View>
 
-                <Button label="TESTE" onPress={handleTeste} />
+                <Button label="teste" onPress={handleTeste} />
             
             </View>
         </View>

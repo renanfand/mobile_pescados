@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     btnDefault: {
         backgroundColor: styleColors.AZUL,
         padding: 12,
-        borderRadius: 5,
+        borderRadius: 7,
         alignItems: 'center',
     },
     txtDefault: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     titulo: {
-        color: styleColors.CINZA_ESCURO,
+        color: styleColors.CINZA,
         fontSize: 35,
         fontWeight: 'bold',
         lineHeight: 40,
@@ -94,18 +94,15 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     labelForm: {
-        marginBottom: 5,
-        color: styleColors.CINZA,
-        fontSize: 16
+        fontSize: 16,
+        color: styleColors.CINZA_PLACE,
     },
     inputDefault: {
-        borderBottomColor: styleColors.CINZA_MEDIO,
-        backgroundColor: 'transparent',
         borderBottomWidth: 2,
-        color: styleColors.BRANCO_PRIMARY,
-        height: 40,
-        paddingLeft: 5,
+        height: 43,
         fontSize: 18,
+        marginTop: 5,
+        borderBottomColor: styleColors.CINZA_MEDIO,
     },
     componentTotal: {
         flexDirection: 'row',
@@ -126,7 +123,16 @@ const styles = StyleSheet.create({
         color: styleColors.BRANCO,
         fontSize: 16,
         fontWeight: 'bold'
-    }
+    },
+    borderColor(val) {
+        return val ? 
+        { borderBottomColor: styleColors.AZUL } : 
+        { borderBottomColor: styleColors.CINZA_MEDIO }
+    },
+    labelColor(val) {
+        return val ? { color: styleColors.AZUL} : 
+                     { color: styleColors.CINZA_PLACE }
+    },
 })
 
 export default styles;

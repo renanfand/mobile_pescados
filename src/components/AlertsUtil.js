@@ -1,7 +1,7 @@
 import { Alert, ToastAndroid } from 'react-native';
 
 export default {
-  alertDefault(title, message,){
+  alertDefault(title, message){
     return Alert.alert(
       title,
       message,

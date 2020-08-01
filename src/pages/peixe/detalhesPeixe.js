@@ -17,13 +17,13 @@ const DetalhesPeixe = ({ navigation }) => {
     const isEditando = !!objParam.peso;
     const { idAgricultor } = navigation.state.params;
 
-        const [data, setData] = useState();
+    const [data, setData] = useState();
     const [dataPeixes, setDataPeixes] = useState([]);
-    const [peso, setPeso] = useState(0);
+    const [peso, setPeso] = useState();
     const [tipo, setTipo] = useState();
-    const [valUnitario, setValUnitario] = useState(0);
-    const [valTotal, setValTotal] = useState(0);
-    const [spinner, setSpinner] = useState(0);
+    const [valUnitario, setValUnitario] = useState();
+    const [valTotal, setValTotal] = useState();
+    const [spinner, setSpinner] = useState();
 
     const styleDataPicker = {
         dateIcon: {
@@ -72,26 +72,36 @@ const DetalhesPeixe = ({ navigation }) => {
     }
 
     function organizaParams() {
-        return  {   data, 
-                    peso: peso ? Util.valor(peso) : 0, 
-                    valUnitario: valUnitario ? Util.valor(valUnitario) : 0, 
-                    valTotal: showValTotal(), 
-                    idTipoPeixe: tipo, 
-                    idAgricultor 
-                };
+        return {
+            data,
+            peso: peso ? Util.valor(peso) : null,
+            valUnitario: valUnitario ? Util.valor(valUnitario) : null,
+            valTotal: showValTotal(),
+            idTipoPeixe: tipo,
+            idAgricultor
+        };
     }
 
     async function salvar() {
         const params = organizaParams();
-        let response = null;
+        setSpinner(true)
+        let response = await Request.post('peixe', params);
+        setSpinner(false)
 
-        isEditando ? response = await Request.put(`peixe/${objParam.id}`, params) :
-                     response = await Request.post('peixe', params);
-        
         if (response) {
-            isEditando ? AlertsUtil.toast('Peixe atualizado com sucesso!') :
-                         AlertsUtil.toast('Peixe inserido com sucesso!');
-            
+            AlertsUtil.toast('Peixe inserido com sucesso!');
+            return navigation.navigate('Peixes', {});
+        }
+    }
+
+    async function editar() {
+        const params = organizaParams();
+        setSpinner(true)
+        let response = await Request.put(`peixe/${objParam.id}`, params);
+        setSpinner(false)
+
+        if (response) {
+            AlertsUtil.toast('Peixe atualizado com sucesso!');
             return navigation.navigate('Peixes', {});
         }
     }
@@ -169,7 +179,8 @@ const DetalhesPeixe = ({ navigation }) => {
 
             </ScrollView>
 
-            <Button label={"SALVAR"} onPress={salvar} />
+            <Button label={isEditando ? "EDITAR" : "SALVAR"} 
+                    onPress={isEditando ? editar : salvar} />
         </View>
     );
 }

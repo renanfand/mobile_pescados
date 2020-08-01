@@ -11,7 +11,7 @@ import Buttom from '../../components/Button';
 
 const DetalhesRacao = ({ navigation }) => {
     const { tpAgricultor } = navigation.state.params;
-    const [nome, setNome] = useState();
+    const [nome, setNome] = useState("");
     const [spinner, setSpinner] = useState(false);
 
     async function salvar() {
@@ -23,7 +23,6 @@ const DetalhesRacao = ({ navigation }) => {
 
         if (response) {
             voltarAgricultor();
-            AlertsUtil.toast('Agricultor inserido com sucesso!');
         }
     }
 
@@ -36,6 +35,8 @@ const DetalhesRacao = ({ navigation }) => {
                 navigation.navigate('AgricultorPeixe', {});
                 break;
         }
+
+        AlertsUtil.toast('Agricultor inserido com sucesso!');
     }
 
     return (

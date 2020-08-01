@@ -41,11 +41,7 @@ const InputDate = ({ label, val, blur, changeText }) => {
                     confirmBtnText="Ok"
                     cancelBtnText="Cancelar"
                     customStyles={styleDataPicker}
-                    onDateChange={(val, val2) => {
-                            changeText(val)
-                            console.log(val2)
-                        }
-                    }
+                    onDateChange={(val, val2) => changeText(val)}
                 />
             </View>
         </>

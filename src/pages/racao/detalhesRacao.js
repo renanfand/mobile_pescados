@@ -16,11 +16,11 @@ const DetalhesRacao = ({ navigation }) => {
     const isEditando = !!objParam.quantidade;
     const { idAgricultor } = navigation.state.params;
 
-    const [tipo, setTipo] = useState(0);
-    const [quantidade, setQuantidade] = useState(0);
+    const [tipo, setTipo] = useState();
+    const [quantidade, setQuantidade] = useState();
     const [data, setData] = useState(null);
-    const [valUnitario, setValorUni] = useState(0);
-    const [valorTotal, setValTotal] = useState(0);
+    const [valUnitario, setValorUni] = useState();
+    const [valorTotal, setValTotal] = useState();
     const [spinner, setSpinner] = useState(false);
 
     const styleDataPicker = {
@@ -63,9 +63,9 @@ const DetalhesRacao = ({ navigation }) => {
     function organizaParams() {
         return {
             data,
-            tipo: tipo ? Util.valor(tipo) : 0,
-            quantidade: quantidade ? Util.valor(quantidade) : 0,
-            valUnitario: valUnitario ? Util.valor(valUnitario) : 0,
+            tipo: tipo ? Util.valor(tipo) : null,
+            quantidade: quantidade ? Util.valor(quantidade) : null,
+            valUnitario: valUnitario ? Util.valor(valUnitario) : null,
             valTotal: showValTotal(),
             idAgricultor
         };
@@ -73,17 +73,26 @@ const DetalhesRacao = ({ navigation }) => {
 
     async function salvar() {
         const params = organizaParams();
-        let response = null;
-
+        
         setSpinner(true);
-        isEditando ? response = await Request.put(`racao/${objParam.id}`, params) :
-                     response = await Request.post('racao', params);
+        let response = await Request.post('racao', params);
         setSpinner(false);
 
         if (response) {
-            isEditando ? AlertsUtil.toast('Ração atualizada com sucesso!') :
-                         AlertsUtil.toast('Ração inserida com sucesso!');
+            AlertsUtil.toast('Ração inserida com sucesso!');
+            return navigation.navigate('Racoes', {});
+        }
+    }
 
+    async function editar() {
+        const params = organizaParams();
+        
+        setSpinner(true);
+        let response = await Request.put(`racao/${objParam.id}`, params);
+        setSpinner(false);
+
+        if (response) {
+            AlertsUtil.toast('Ração atualizada com sucesso!');
             return navigation.navigate('Racoes', {});
         }
     }
@@ -158,7 +167,8 @@ const DetalhesRacao = ({ navigation }) => {
                 </View>
             </ScrollView>
 
-            <Button label={"SALVAR"} onPress={salvar} />
+            <Button label={isEditando ? "EDITAR" : "SALVAR"} 
+                    onPress={isEditando ? editar : salvar} />
         </View>
     );
 }

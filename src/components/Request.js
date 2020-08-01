@@ -1,12 +1,15 @@
 import AlertsUtil from './AlertsUtil';
 import api from '../services/api';
+import Util from './Util';
 
 export default {
 
     async post(url, params) {
         try {
-            const response = await api.post(url, params);
-            return this.returnDefault(response);
+            if(Util.validate(params)) {
+                let response = await api.post(url, params);
+                return this.returnDefault(response);
+            }
         }
         catch (error) {
             AlertsUtil.alertError(error.name, error.message || error);
@@ -31,8 +34,10 @@ export default {
 
     async put(url, params) {
         try {
-            const response = await api.put(url, params);
-            return this.returnDefault(response);
+            if(Util.validate(params)) {
+                const response = await api.put(url, params);
+                return this.returnDefault(response);
+            }
         }
         catch (error) {
             AlertsUtil.alertError(error.name, error.message || error);
