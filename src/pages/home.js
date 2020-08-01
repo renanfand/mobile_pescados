@@ -1,8 +1,12 @@
 import React from 'react';
-import { View, Image } from 'react-native';
-import image from '../assets/img/Pescados.png'
-import styleIndex from '../assets/css/styleIndex'
+import { View, Image, Text } from 'react-native';
+import image from '../assets/img/logo1.png'
+import ImgPeixe from '../assets/img/iconPeixe.png';
+import ImgRacao from '../assets/img/iconRacao.png';
+import ImgDivizao from '../assets/img/divizor.png';
+import styleIndex from '../assets/css/styleIndex';
 import Button from '../components/Button';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const Home = ({ navigation }) => {
 
@@ -25,14 +29,22 @@ const Home = ({ navigation }) => {
             </View>
 
             <View style={styleIndex.containerbtn}>
-                <Button label="PEIXE" onPress={handlePeixe} />
-                <View style={{ marginVertical: 8}}></View>
-                
-                <Button label="RAÇÃO" onPress={handleRacao} />
-                <View style={{ marginVertical: 8}}></View>
+                <TouchableOpacity onPress={handlePeixe}
+                    style={{ padding: 40, alignItems: 'center', flexDirection: 'row' }}>
+                    
+                    <Image source={ImgPeixe} style={styleIndex.imgIcon} />
+                    <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#fff' }}>Peixe</Text>
+                </TouchableOpacity>
 
-                <Button label="teste" onPress={handleTeste} />
-            
+                <Image source={ImgDivizao} style={styleIndex.imgDivizor} />
+
+                <TouchableOpacity onPress={handleRacao}
+                    style={{ padding: 40, alignItems: 'center', flexDirection: 'row' }}>
+                    
+                    <Image source={ImgRacao} style={styleIndex.imgIcon} />
+                    <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#fff' }}>Ração</Text>
+                </TouchableOpacity>
+
             </View>
         </View>
     );
