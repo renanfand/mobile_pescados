@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from "react-native";
-
 import styleColors from './styleColors';
+var {width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     fundo: {
@@ -21,19 +21,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     img: {
-        width: '68%',
-        height: '35%',
+        alignSelf: 'center',
+        height: 250,
+        width: width - 150,
     },
     imgIcon: {
-        width: '35%',
-        height: '0%',
-        paddingVertical: 35,
-        marginHorizontal: 20,
+        alignSelf: 'center',
+        width: 85,
+        height: 85,
+        marginHorizontal: 20
     },
     imgDivizor: {
-        width: '85%',
-        height: '05%',
         alignSelf: 'center',
+        width: '120%',
+        height: 22,
     },
     containerbtn: {
         flex: 1,
@@ -134,6 +135,17 @@ const styles = StyleSheet.create({
         color: styleColors.BRANCO,
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    txtBtnHome: { 
+        fontSize: 40, 
+        fontWeight: 'bold', 
+        color: styleColors.BRANCO, 
+        alignSelf: 'center' 
+    },
+    btnHome: {
+        paddingVertical: 30, 
+        alignSelf: 'center', 
+        flexDirection: 'row' 
     },
     borderColor(val) {
         return val ? 

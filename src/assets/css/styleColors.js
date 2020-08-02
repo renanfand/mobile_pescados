@@ -5,7 +5,7 @@ export default {
     CINZA_MEDIO: '#CCC',
     CINZA_PLACE: '#9e9e9e',
     AZUL: '#485399',
-    //AZUL: '#132b4d',
+    AZUL_ESCURO: '#132b4d',
     BRANCO: '#FFF',
     CINZA: '#555',
     CINZA_ESCURO: '#444',

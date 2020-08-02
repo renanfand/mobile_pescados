@@ -23,32 +23,27 @@ const Home = ({ navigation }) => {
         navigation.navigate('Teste');
     }
 
+    function button(label, action, img) {
+        return (
+            <TouchableOpacity onPress={action} style={styleIndex.btnHome}>
+                <Image source={img} resizeMode="contain" style={styleIndex.imgIcon} />
+                <Text style={styleIndex.txtBtnHome}>{label}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     return (
-        <View style={[styleIndex.fundo,{backgroundColor: styleColors.AZUL}]}>
-            <View style={styleIndex.containerImg}>
-                <Image source={image} style={styleIndex.img} />
-            </View>
+        <View style={[styleIndex.fundo, { backgroundColor: styleColors.AZUL }]}>
+            <Image source={image} resizeMode="contain" style={styleIndex.img} />
 
             <View style={styleIndex.containerbtn}>
-                <TouchableOpacity onPress={handlePeixe}
-                    style={{ padding: 40, alignItems: 'center', flexDirection: 'row' }}>
-                    
-                    <Image source={ImgPeixe} style={styleIndex.imgIcon} />
-                    <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#fff' }}>Peixe</Text>
-                </TouchableOpacity>
-
-                <Image source={ImgDivizao} style={styleIndex.imgDivizor} />
-
-                <TouchableOpacity onPress={handleRacao}
-                    style={{ padding: 40, alignItems: 'center', flexDirection: 'row' }}>
-                    
-                    <Image source={ImgRacao} style={styleIndex.imgIcon} />
-                    <Text style={{ fontSize: 40, fontWeight: 'bold', color: '#fff' }}>Ração</Text>
-                </TouchableOpacity>
-
+                {button("Peixe", handlePeixe, ImgPeixe)}
+                <Image source={ImgDivizao} resizeMode="contain" style={styleIndex.imgDivizor} />
+                {button("Ração", handleRacao, ImgRacao)}
             </View>
         </View>
     );
 };
 
 export default Home;
+
